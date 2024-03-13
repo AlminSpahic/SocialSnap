@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moj Profil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="VERTIMO.png">
+    <style>
+        .profile-picture {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        #profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 100%;
+            margin-left: 0px;
+        }
+
+        #promijeni-sliku-btn,
+        #reset-sliku-btn {
+            display: block;
+            margin-top: 10px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            width: 200px;
+            height: 50px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px; /* Promijenjeno kako bi dugmad bila bliže lijevom rubu */
+            margin-right: 10px; /* Dodano kako bi dugmad bila bliže desnom rubu */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo">
+            <img src="SS.png" alt="Prodilna">
+        </div>
+        <div class="top-icons">
+            <a href="main.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="myprofile.html">My Profile</a>
+        </div>
+    </div>
+
+    <form id="picture-form" enctype="multipart/form-data" style="display: none;">
+        <input type="file" id="picture-input" accept="image/*">
+    </form>
+
+    <div class="content">
+        <div class="profile-picture">
+            <img id="profile-image" src="Profilna.png" alt="Profilna Slika">
+        </div>
+    
+        <button id="promijeni-sliku-btn">Promijeni Profilnu Sliku</button>
+        <button id="reset-sliku-btn">Vrati na podrazumijevanu sliku</button>
+
+        <div id="description-container">
+            <textarea id="user-description" maxlength="100" placeholder="Unesite nešto o sebi (do 100 Karaktera)"></textarea>
+        </div>
+
+        <div class="user-posts">
+            <!-- Tvoj kod za prikaz korisničkih postova ide ovdje -->
+            <!-- Možeš koristiti sličnu strukturu kao u main.html za prikazivanje postova -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy;Projekat A.Spahić&trade;
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const promijeniSlikuBtn = document.getElementById('promijeni-sliku-btn');
+            const resetSlikuBtn = document.getElementById('reset-sliku-btn');
+            const pictureInput = document.getElementById('picture-input');
+            const profileImage = document.getElementById('profile-image');
+            const defaultProfileImage = 'Profilna.png';
+
+            promijeniSlikuBtn.addEventListener('click', () => {
+                pictureInput.click();
+            });
+
+            resetSlikuBtn.addEventListener('click', () => {
+                profileImage.src = defaultProfileImage;
+            });
+
+            pictureInput.addEventListener('change', (e) => {
+                const selectedFile = e.target.files[0];
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        profileImage.src = event.target.result;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

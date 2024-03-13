@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Social Media Site</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="VERTIMO.png">
+    <style>
+        /* Centered Logo styles */
+        .centered-logo {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .centered-logo img {
+            width: 200px; /* Adjust as needed */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Top Bar styles */
+        .top-bar {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .top-icons {
+            margin-top: 20px;
+        }
+
+        /* Add this style block to your existing styles.css file */
+        .uploaded-picture {
+            position: relative;
+            display: inline-block;
+        }
+
+        .picture-options {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            padding: 5px;
+            display: none;
+        }
+
+        .uploaded-picture:hover .picture-options {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="centered-logo">
+            <img src="SS.png" alt="Logo">
+        </div>
+        <div class="top-icons">
+            <a id="search" href="search.html">Search</a>
+            <a id="myprofile" href="myprofile.html">My Profile</a>            
+            <b><button id="add-post">Add Picture</button></b>
+            <a id="video" href="Video.html">Videos</a>
+        </div>
+    </div>
+ 
+    <!-- Hidden form to select and upload picture -->
+    <form id="picture-form" enctype="multipart/form-data" style="display: none;">
+        <input type="file" id="picture-input" accept="image/*">
+    </form>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Stories Section -->
+        <div class="stories">
+            <!-- Story items go here -->
+        </div>
+
+        <!-- Display uploaded pictures, messages, reels -->
+        <div class="uploaded-pictures">
+            <!-- Uploaded pictures will be displayed here -->
+            <!-- This section will be populated with stored pictures -->
+        </div>
+    </div>
+
+    <!-- Full-screen picture display -->
+    <div id="full-screen-picture" class="full-screen-picture">
+        <img src="" alt="Full-Screen Picture">
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        // Get elements
+        const addPostButton = document.getElementById('add-post');
+        const pictureForm = document.getElementById('picture-form');
+        const pictureInput = document.getElementById('picture-input');
+        const uploadedPictures = document.querySelector('.uploaded-pictures');
+
+        // Load stored pictures on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedPictures = JSON.parse(localStorage.getItem('pictures')) || [];
+            storedPictures.forEach(pictureData => {
+                displayStoredPicture(pictureData);
+            });
+        });
+
+        // Add event listener to "Add Post" button
+        addPostButton.addEventListener('click', () => {
+            pictureInput.click();
+        });
+
+        // Add event listener to picture input
+        pictureInput.addEventListener('change', () => {
+            if (pictureInput.files.length > 0) {
+                const pictureFile = pictureInput.files[0];
+                displayPicture(pictureFile);
+            }
+        });
+
+        // Function to display stored picture on the page
+        function displayStoredPicture(pictureData) {
+            const img = document.createElement('img');
+            img.src = pictureData.dataUrl;
+            img.alt = 'Uploaded Picture';
+            img.style.width = '602px';
+            img.style.height = '602px';
+            img.style.objectFit = 'contain';
+            img.style.margin = '10px';
+
+            // Create options for delete and share
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'picture-options';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete Post';
+            deleteButton.addEventListener('click', () => {
+                uploadedPictures.removeChild(optionsDiv.parentNode);
+                removeStoredPicture(pictureData);
+            });
+
+            const shareButton = document.createElement('button');
+            shareButton.textContent = 'Share Photo';
+
+            optionsDiv.appendChild(deleteButton);
+            optionsDiv.appendChild(shareButton);
+
+            const pictureDiv = document.createElement('div');
+            pictureDiv.className = 'uploaded-picture';
+            pictureDiv.appendChild(img);
+            pictureDiv.appendChild(optionsDiv);
+
+            uploadedPictures.appendChild(pictureDiv);
+        }
+
+        // Function to display and store picture on the page
+        function displayPicture(file) {
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const pictureDataUrl = event.target.result;
+                const pictureData = { dataUrl: pictureDataUrl };
+                displayStoredPicture(pictureData);
+
+                // Store the uploaded picture data in local storage
+                const storedPictures = JSON.parse(localStorage.getItem('pictures')) || [];
+                storedPictures.push(pictureData);
+                localStorage.setItem('pictures', JSON.stringify(storedPictures));
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Function to remove stored picture
+        function removeStoredPicture(pictureData) {
+            const storedPictures = JSON.parse(localStorage.getItem('pictures')) || [];
+            const updatedPictures = storedPictures.filter(picture => picture.dataUrl !== pictureData.dataUrl);
+            localStorage.setItem('pictures', JSON.stringify(updatedPictures));
+        }
+    </script>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy;Project of A.Spahic&trade;
+    </footer>
+</body>
+</html>
